@@ -1,0 +1,18 @@
+server:
+  port: 8082
+  servlet:
+    context-path: '/ead-course/'
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ead-course
+    username: rdgr777
+    password: 995647
+  jpa:
+    hibernate:
+      ddl-auto: create
+      dialect: org.hibernate.dialect.PostgreSqlDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql:true
