@@ -4,12 +4,12 @@ server:
     context-path: '/ead-course/'
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/ead-course
+    url: jdbc:postgresql://localhost:5432/ead_course
     username: rdgr777
     password: 995647
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSqlDialect
       jdbc:
         lob.non-contextual-creation: true
