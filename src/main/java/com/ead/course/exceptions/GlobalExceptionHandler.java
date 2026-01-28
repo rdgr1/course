@@ -14,4 +14,6 @@ public class GlobalExceptionHandler {
         var errorResponse = new ErrorRecordResponse(404, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+
+    
 }
