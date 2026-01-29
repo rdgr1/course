@@ -42,7 +42,6 @@ public class CourseModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private CourseStatus courseStatus;
 
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseLevel courseLevel;

@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.Set;
 public record ModuleRecordDto(
-        @NotBlank
+        @NotBlank(message = "Name is mandatory")
         String name,
-        @NotBlank
+        @NotBlank(message = "Description is mandatory")
         String description
 ) {
 }

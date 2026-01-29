@@ -46,7 +46,7 @@ public class LessonServiceImpl implements LessonService {
     public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId) {
         var optionalLesson = repo.findLessonIntoModule(moduleId, lessonId);
         if (optionalLesson.isEmpty()){
-            throw new NotFoundException("Error: Lesson not found.");
+            throw new NotFoundException("Error: Lesson not found for this module.");
         }
         return optionalLesson;
     }
