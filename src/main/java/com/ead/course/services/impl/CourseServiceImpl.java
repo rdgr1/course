@@ -3,7 +3,9 @@ package com.ead.course.services.impl;
 import com.ead.course.dtos.CourseRecordDto;
 import com.ead.course.exceptions.NotFoundException;
 import com.ead.course.models.CourseModel;
+import com.ead.course.models.CourseUserModel;
 import com.ead.course.repositories.CourseRepository;
+import com.ead.course.repositories.CourseUserRepository;
 import com.ead.course.repositories.LessonRepository;
 import com.ead.course.repositories.ModuleRepository;
 import com.ead.course.services.CourseService;
@@ -25,12 +27,13 @@ import java.util.UUID;
 public class CourseServiceImpl implements CourseService {
     final CourseRepository repo;
     final ModuleRepository moduleRepository;
-
+    final CourseUserRepository courseUserRepository;
     final LessonRepository lessonRepository;
 
-    public CourseServiceImpl(CourseRepository repo, ModuleRepository moduleRepository, LessonRepository lessonRepository) {
+    public CourseServiceImpl(CourseRepository repo, ModuleRepository moduleRepository, CourseUserRepository courseUserRepository, LessonRepository lessonRepository) {
         this.repo = repo;
         this.moduleRepository = moduleRepository;
+        this.courseUserRepository = courseUserRepository;
         this.lessonRepository = lessonRepository;
     }
 
@@ -47,6 +50,7 @@ public class CourseServiceImpl implements CourseService {
             });
             moduleRepository.deleteAll(modules);
         }
+
         repo.delete(course);
     }
 
@@ -74,6 +78,10 @@ public class CourseServiceImpl implements CourseService {
         var course = repo.findById(courseId);
         if (course.isEmpty()) {
             throw new NotFoundException("Error: Course not found.");
+        }
+        List<CourseUserModel> courseUserModelList = courseUserRepository.findAllCourseUserIntoCourse(courseId);
+        if (!courseUserModelList.isEmpty()){
+            courseUserRepository.deleteAll(courseUserModelList);
         }
         return course;
     }
