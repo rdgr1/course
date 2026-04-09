@@ -3,6 +3,7 @@ package com.ead.course.models;
 import com.ead.course.enums.CourseLevel;
 import com.ead.course.enums.CourseStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -31,11 +32,9 @@ public class CourseModel implements Serializable {
     private String description;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime creationDate;
 
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime lastUpdateDate;
 
     @Column(nullable = false)
@@ -56,7 +55,15 @@ public class CourseModel implements Serializable {
     @Column(length = 255)
     private String imageUrl;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    Set<CourseUserModel> coursesUsers;
 
+    public CourseUserModel convertToCourseUserModel(UUID userId){
+        return new CourseUserModel(null,userId,this);
+    }
+
+    @JsonIgnore
     public Set<ModuleModel> getModules() {
         return modules;
     }
@@ -135,5 +142,14 @@ public class CourseModel implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    @JsonIgnore
+    public Set<CourseUserModel> getCourseUsers() {
+        return coursesUsers;
+    }
+
+    public void setCourseUsers(Set<CourseUserModel> courseUsers) {
+        this.coursesUsers = courseUsers;
     }
 }

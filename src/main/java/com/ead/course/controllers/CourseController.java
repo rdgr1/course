@@ -5,6 +5,8 @@ import com.ead.course.models.CourseModel;
 import com.ead.course.services.impl.CourseServiceImpl;
 import com.ead.course.specifications.SpecificationTemplate;
 import jakarta.validation.Valid;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,14 +21,16 @@ import java.util.UUID;
 @RequestMapping("/courses")
 public class CourseController {
     final CourseServiceImpl service;
-
+    Logger logger = LogManager.getLogger(CourseController.class);
     public CourseController(CourseServiceImpl service) {
         this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<?> saveCourse(@RequestBody @Valid CourseRecordDto courseRecordDto) {
+        logger.debug("POST saveCourse received {}", courseRecordDto);
         if (service.existsByName(courseRecordDto.name())) {
+            logger.warn("Course Name {} is Already Taken!",courseRecordDto.name());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Course Name is Already Taken!");
         }
         var saved = service.save(courseRecordDto);
@@ -34,8 +38,11 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec, Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll(spec, pageable));
+    public ResponseEntity<Page<CourseModel>> getAllCourses(SpecificationTemplate.CourseSpec spec, Pageable pageable, @RequestParam(required = false) UUID userId) {
+        Page<CourseModel> courseModelPage = (userId != null)
+                ? service.findAll(SpecificationTemplate.courseUserId(userId).and(spec), pageable)
+                : service.findAll(spec, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(courseModelPage);
     }
 
     @GetMapping("/{courseId}")
@@ -44,13 +51,15 @@ public class CourseController {
     }
 
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<?> delete(@PathVariable UUID courseId) {
+    public ResponseEntity<?> deleteCourse(@PathVariable UUID courseId) {
+        logger.debug("DELETE deleteCourse courseId: {}", courseId);
         service.delete(service.findById(courseId).get());
         return ResponseEntity.status(HttpStatus.OK).body("Course Deleted Successfully!");
     }
 
     @PutMapping("/{courseId}")
     public ResponseEntity<CourseModel> updateCourse(@PathVariable UUID courseId, @RequestBody @Valid CourseRecordDto dto) {
+        logger.debug("PUT updateCourse courseId: {}, received: {}", courseId, dto);
         return ResponseEntity.status(HttpStatus.OK).body(service.update(dto, service.findById(courseId).get()));
     }
 }

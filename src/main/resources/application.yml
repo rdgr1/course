@@ -7,7 +7,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/ead_course
     username: rdgr777
     password: 995647
-  jpa:
+    jpa:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSqlDialect
@@ -16,3 +16,19 @@ spring:
     properties:
       hibernate:
         show_sql:true
+ead:
+  api:
+    url:
+      user: 'http://localhost:8083/ead-authuser'
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+logging:
+  level:
+    com.ead: DEBUG
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
