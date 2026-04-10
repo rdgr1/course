@@ -84,4 +84,20 @@ public class AuthUserClient {
             throw new RuntimeException("Error Request POST RestClient", e);
         }
     }
+
+    public void deleteUserCourseByCourse(UUID courseId){
+        var url = baseUrlAuthUser + "/users" + "/courses/" + courseId;
+        try {
+            client.delete()
+                   .uri(url)
+                   .retrieve()
+                   .onStatus(status -> status.value() == 404, (request,response) -> {
+                       logger.error("UserCourse not found with courseId: {}", courseId);
+                       throw new NotFoundException("Error: UserCourse not found.");
+                   }).toBodilessEntity();
+        } catch (RestClientException e){
+            logger.error("Error Request DELETE RestClient",e);
+            throw new RuntimeException("Error Request DELETE RestClient with cause: {}", e);
+        }
+    }
 }

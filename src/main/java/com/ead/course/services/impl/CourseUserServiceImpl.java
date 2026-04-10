@@ -33,4 +33,10 @@ public class CourseUserServiceImpl implements CourseUserService {
         authUserClient.postSubscriptionInCourse(courseUserModel.getCourseModel().getCourseId(), courseUserModel.getUserId());
         return  courseUserModel;
     }
+
+    @Override
+    public void delete(CourseUserModel courseUserModel) {
+        repo.delete(courseUserModel);
+    }
+
 }
