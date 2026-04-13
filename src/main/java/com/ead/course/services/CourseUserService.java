@@ -12,4 +12,8 @@ public interface CourseUserService {
     CourseUserModel saveAndSendSubscriptionUserInCourse(CourseUserModel courseUserModel);
 
     void delete(CourseUserModel courseUserModel);
+
+    boolean existsByUserId(UUID userId);
+
+    void deleteAllByUserId(UUID userId);
 }
