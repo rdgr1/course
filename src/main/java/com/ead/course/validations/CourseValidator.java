@@ -1,7 +1,6 @@
 
 package com.ead.course.validations;
 
-import com.ead.course.client.AuthUserClient;
 import com.ead.course.dtos.CourseRecordDto;
 import com.ead.course.enums.UserType;
 import com.ead.course.services.impl.CourseServiceImpl;
@@ -21,12 +20,10 @@ public class CourseValidator implements Validator {
 
     private final Validator validator;
     private final CourseServiceImpl courseService;
-    private final AuthUserClient authUserClient;
 
-    public CourseValidator(@Qualifier("defaultValidator") Validator validator, CourseServiceImpl courseService, AuthUserClient authUserClient) {
+    public CourseValidator(@Qualifier("defaultValidator") Validator validator, CourseServiceImpl courseService) {
         this.validator = validator;
         this.courseService = courseService;
-        this.authUserClient = authUserClient;
     }
 
     @Override
@@ -40,7 +37,6 @@ public class CourseValidator implements Validator {
         validator.validate(courseRecordDto,errors);
         if (!errors.hasErrors()){
             validateCourseName(courseRecordDto, errors);
-            validateUserInstructor(courseRecordDto.userInstructor(), errors);
         }
     }
 
@@ -50,14 +46,14 @@ public class CourseValidator implements Validator {
             logger.error("Error Validation courseName: {}", courseRecordDto.name());
         }
     }
-
-    private void validateUserInstructor(UUID userInstructor, Errors errors){
-        var responseUserInstructor = authUserClient.getOneUserById(userInstructor).getBody();
-        assert responseUserInstructor != null;
-        if ( responseUserInstructor.userType().equals(UserType.STUDENT) ||
-             responseUserInstructor.userType().equals(UserType.USER) ){
-            errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN");
-            logger.error("Error Validation userInstructor: {}", userInstructor);
-        }
-    }
+    /* Uso Futuro */
+//    private void validateUserInstructor(UUID userInstructor, Errors errors){
+//        var responseUserInstructor = authUserClient.getOneUserById(userInstructor).getBody();
+//        assert responseUserInstructor != null;
+//        if ( responseUserInstructor.userType().equals(UserType.STUDENT) ||
+//             responseUserInstructor.userType().equals(UserType.USER) ){
+//            errors.rejectValue("userInstructor", "UserInstructorError", "User must be INSTRUCTOR or ADMIN");
+//            logger.error("Error Validation userInstructor: {}", userInstructor);
+//        }
+//    }
 }

@@ -2,7 +2,6 @@ package com.ead.course.models;
 
 import com.ead.course.enums.CourseLevel;
 import com.ead.course.enums.CourseStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -54,14 +53,6 @@ public class CourseModel implements Serializable {
 
     @Column(length = 255)
     private String imageUrl;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
-    Set<CourseUserModel> coursesUsers;
-
-    public CourseUserModel convertToCourseUserModel(UUID userId){
-        return new CourseUserModel(null,userId,this);
-    }
 
     @JsonIgnore
     public Set<ModuleModel> getModules() {
@@ -144,12 +135,4 @@ public class CourseModel implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    @JsonIgnore
-    public Set<CourseUserModel> getCourseUsers() {
-        return coursesUsers;
-    }
-
-    public void setCourseUsers(Set<CourseUserModel> courseUsers) {
-        this.coursesUsers = courseUsers;
-    }
 }
